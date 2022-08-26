@@ -30,29 +30,28 @@ pool:
 
 steps:
 - bash: |
-    if [ -e $CATALOG_DESCRIPTOR ]
+    if [ -e $(CATALOG_DESCRIPTOR) ]
     then
       # Update catalog meta-data 
-      mkdir -p $TMP_DIR
+      mkdir -p $(TMP_DIR)
       
-      if [ -d $TMP_DIR ]
+      if [ -d $(TMP_DIR) ]
       then 
-        rm -rf $TMP_DIR
-        mkdir $TMP_DIR
+        rm -rf $(TMP_DIR)
+        mkdir $(TMP_DIR)
       fi 
       
-      cat $API_FILE
+      cat $(API_FILE)
       
       echo Environment
       env
-      echo Anypont client id is $(ANYPOINT_CLIENT_ID)
 
       api-catalog update-descriptor 
 
       # Publish API      
       api-catalog publish-asset \
       --organization $(ANYPOINT_ORG) \
-      --host=$(ANYPOINT_HOST) \
+      --host=$ANYPOINT_HOST \
       --environment=$(ANYPOINT_ENV) \
       --client_id=$(ANYPOINT_CLIENT_ID) \
       --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
@@ -75,43 +74,43 @@ steps:
     else
       exit 1
     fi
+  env:
+    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
+    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
   displayName: 'Catalog and validate'
 
 - bash: |
     # Save ruleset for later
-    cp openapi-best-practices-ruleset.yaml $TMP_DIR
+    cp openapi-best-practices-ruleset.yaml $(TMP_DIR)
     
     VERSION=$(<version.txt)
     
-    ANYPOINT_CLIENT_ID=$(ANYPOINT_CLIENT_ID)
-    ANYPOINT_CLIENT_SECRET=$(ANYPOINT_CLIENT_SECRET)
-  
     echo Environment
     env
 
     # Download new asset
-    anypoint-cli exchange asset download package-tracker-api/$VERSION $TMP_DIR \
-        --organization $ANYPOINT_ORG \
-        --host=$ANYPOINT_HOST \
-        --environment=$ANYPOINT_ENV
+    anypoint-cli exchange asset download package-tracker-api/$VERSION $(TMP_DIR) \
+        --organization $(ANYPOINT_ORG) \
+        --host=$(ANYPOINT_HOST) \
+        --environment=$(ANYPOINT_ENV)
+  env:
+    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
+    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
   displayName: 'Download asset from Exchange'
 
 - bash: |
     # Validate API
     
-    unset ANYPOINT_USERNAME
-    unset ANYPOINT_PASSWORD
-
     echo Environment
     env
     
     # Move and unzip file
-    unzip -o $TMP_DIR/*.zip -d $TMP_DIR
-    ls $TMP_DIR
-    anypoint-cli governance api validate --rulesets  $TMP_DIR/openapi-best-practices-ruleset.yaml $TMP_DIR/*.zip \
-    --organization $ANYPOINT_ORG \
-    --host=$ANYPOINT_HOST \
-    --environment=$ANYPOINT_ENV > output.txt
+    unzip -o $(TMP_DIR)/*.zip -d $(TMP_DIR)
+    ls $(TMP_DIR)
+    anypoint-cli governance api validate --rulesets  $(TMP_DIR)/openapi-best-practices-ruleset.yaml $(TMP_DIR)/*.zip \
+    --organization $(ANYPOINT_ORG) \
+    --host=$(ANYPOINT_HOST) \
+    --environment=$(ANYPOINT_ENV) > output.txt
     
     cat output.txt
     
@@ -122,4 +121,7 @@ steps:
     else
         echo "Failed validation"
     fi
+  env:
+    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
+    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
   displayName: 'Validate against ruleset'
