@@ -43,6 +43,9 @@ steps:
       
       cat $API_FILE
       
+      echo Environment
+      env
+
       api-catalog update-descriptor 
 
       # Publish API      
@@ -81,6 +84,9 @@ steps:
     
     unset ANYPOINT_USERNAME
     unset ANYPOINT_PASSWORD
+  
+    echo Environment
+    env
 
     # Download new asset
     anypoint-cli exchange asset download package-tracker-api/$VERSION $TMP_DIR \
@@ -95,6 +101,9 @@ steps:
     unset ANYPOINT_USERNAME
     unset ANYPOINT_PASSWORD
 
+    echo Environment
+    env
+    
     # Move and unzip file
     unzip -o $TMP_DIR/*.zip -d $TMP_DIR
     ls $TMP_DIR
