@@ -3,6 +3,16 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+variables:
+  CATALOG_DESCRIPTOR: 'catalog.yaml'
+  ANYPOINT_ORG: '67d9aaea-3ab0-4fb4-8f45-61f48c60c4f2'
+  ANYPOINT_ENV: 'Sandbox'
+  ANYPOINT_HOST: 'anypoint.mulesoft.com'
+  AWS_API_ID: '0yfmyiql34'
+  API_FILE: "api.json"
+  TMP_DIR: 'xyz123'
+  VERSION: '0'
+
 trigger:
 - master
 
@@ -10,6 +20,46 @@ pool:
   name: "default"
 
 steps:
+- bash:
+    if [ -e $CATALOG_DESCRIPTOR ]
+    then
+      mkdir -p $TMP_DIR
+      
+      if [ -d $TMP_DIR ]
+      then 
+        rm -rf $TMP_DIR
+        mkdir $TMP_DIR
+      fi 
+      
+      cat $API_FILE
+      
+      api-catalog update-descriptor 
+      
+      api-catalog publish-asset \
+      --organization $ANYPOINT_ORG \
+      --host=$ANYPOINT_HOST \
+      --environment=$ANYPOINT_ENV \
+      --client_id=$ANYPOINT_CLIENT_ID \
+      --client_secret=$ANYPOINT_CLIENT_SECRET > catalog-result.txt
+      
+      cat catalog-result.txt
+      
+      while IFS= read -r line
+      do
+        echo $line
+        read -a strarr <<< $line
+        if [[ "$line" == "Version"* ]]
+        then
+          VERSION="${strarr[1]}""
+        fi
+      done < catalog-result.txt
+
+      echo Latest version $VERSION
+      echo $VERSION > version.txt
+    else
+      exit 1
+    fi
+
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
