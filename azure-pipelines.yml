@@ -128,5 +128,3 @@ steps:
     ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
   displayName: 'Validate against ruleset'
 
-- 
-
