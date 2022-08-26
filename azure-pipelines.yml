@@ -113,7 +113,3 @@ steps:
         echo "Failed validation"
     fi
   displayName: 'Validate against ruleset'
-
-- bash: |
-    echo Updating AWS API Gateway
-  displayName: 'Update AWS API Gateway'
