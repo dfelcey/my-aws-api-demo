@@ -62,7 +62,7 @@ steps:
         read -a strarr <<< $line
         if [[ "$line" == "Version"* ]]
         then
-          VERSION="${strarr[1]}""
+          VERSION="${strarr[1]}"
         fi
       done < catalog-result.txt
 
