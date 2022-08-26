@@ -96,8 +96,8 @@ steps:
         --host=$(ANYPOINT_HOST) \
         --environment=$(ANYPOINT_ENV)
   env:
-    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
-    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
+    ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
+    ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
   displayName: 'Download asset from Exchange'
 
 - bash: |
