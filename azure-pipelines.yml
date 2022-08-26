@@ -79,6 +79,9 @@ steps:
     
     VERSION=$(<version.txt)
     
+    unset ANYPOINT_USERNAME
+    unset ANYPOINT_PASSWORD
+
     # Download new asset
     anypoint-cli exchange asset download package-tracker-api/$VERSION $TMP_DIR \
         --organization $ANYPOINT_ORG \
@@ -89,6 +92,9 @@ steps:
 - bash: |
     # Validate API
     
+    unset ANYPOINT_USERNAME
+    unset ANYPOINT_PASSWORD
+
     # Move and unzip file
     unzip -o $TMP_DIR/*.zip -d $TMP_DIR
     ls $TMP_DIR
