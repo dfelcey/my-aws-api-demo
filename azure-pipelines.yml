@@ -104,7 +104,7 @@ steps:
         echo "Failed validation"
         exit 1
     else
-        echo "Failed paswed"
+        echo "Failed validation"
     fi
   displayName: 'Validate against ruleset'
 
