@@ -124,6 +124,6 @@ steps:
         echo "Failed validation"
     fi
   env:
-    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
-    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
+    ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
+    ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
   displayName: 'Validate against ruleset'
