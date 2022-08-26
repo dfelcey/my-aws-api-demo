@@ -4,14 +4,23 @@
 # https://aka.ms/yaml
 
 variables:
-  CATALOG_DESCRIPTOR: 'catalog.yaml'
-  ANYPOINT_ORG: '67d9aaea-3ab0-4fb4-8f45-61f48c60c4f2'
-  ANYPOINT_ENV: 'Sandbox'
-  ANYPOINT_HOST: 'anypoint.mulesoft.com'
-  AWS_API_ID: '0yfmyiql34'
-  API_FILE: "api.json"
-  TMP_DIR: 'xyz123'
-  VERSION: '0'
+  - name: CATALOG_DESCRIPTOR
+    value: 'catalog.yaml'
+  - name: ANYPOINT_ORG
+    value: '67d9aaea-3ab0-4fb4-8f45-61f48c60c4f2'
+  - name: ANYPOINT_ENV
+    value: 'Sandbox'
+  - name: ANYPOINT_HOST
+    value: 'anypoint.mulesoft.com'
+  - name: AWS_API_ID
+    value: '0yfmyiql34'
+  - name: API_FILE
+    value: "api.json"
+  - name: TMP_DIR
+    value: 'xyz123'
+  - name: VERSION
+    value: '0'
+  - group: anypoint-variable-group
 
 trigger:
 - master
