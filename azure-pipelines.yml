@@ -51,7 +51,7 @@ steps:
       # Publish API      
       api-catalog publish-asset \
       --organization $(ANYPOINT_ORG) \
-      --host=$ANYPOINT_HOST \
+      --host=$(ANYPOINT_HOST) \
       --environment=$(ANYPOINT_ENV) \
       --client_id=$(ANYPOINT_CLIENT_ID) \
       --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
