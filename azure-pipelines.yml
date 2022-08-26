@@ -45,16 +45,17 @@ steps:
       
       echo Environment
       env
+      echo Anypont client id is $(ANYPOINT_CLIENT_ID)
 
       api-catalog update-descriptor 
 
       # Publish API      
       api-catalog publish-asset \
-      --organization $ANYPOINT_ORG \
-      --host=$ANYPOINT_HOST \
-      --environment=$ANYPOINT_ENV \
-      --client_id=$ANYPOINT_CLIENT_ID \
-      --client_secret=$ANYPOINT_CLIENT_SECRET > catalog-result.txt
+      --organization $(ANYPOINT_ORG) \
+      --host=$(ANYPOINT_HOST) \
+      --environment=$(ANYPOINT_ENV) \
+      --client_id=$(ANYPOINT_CLIENT_ID) \
+      --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
       
       cat catalog-result.txt
       
@@ -82,8 +83,8 @@ steps:
     
     VERSION=$(<version.txt)
     
-    unset ANYPOINT_USERNAME
-    unset ANYPOINT_PASSWORD
+    ANYPOINT_CLIENT_ID=$(ANYPOINT_CLIENT_ID)
+    ANYPOINT_CLIENT_SECRET=$(ANYPOINT_CLIENT_SECRET)
   
     echo Environment
     env
