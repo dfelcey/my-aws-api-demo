@@ -121,7 +121,7 @@ steps:
         echo "Failed validation"
         exit 1
     else
-        echo "Failed validation"
+        echo "Failed succeeded"
     fi
   env:
     ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
