@@ -83,12 +83,12 @@ steps:
     anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
     --organization $(ANYPOINT_ORG) \
     --host=$(ANYPOINT_HOST) \
-    --environment=$(ANYPOINT_ENV) > output.txt
+    --environment=$(ANYPOINT_ENV) > governance.txt
     
-    cat output.txt
+    cat governance.txt
     
     # If output indicates error then stop
-    if [[ ! $(grep "Spec conforms with Ruleset" output.txt) ]] ; then
+    if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
         echo "Failed validation"
         exit 1
     else
