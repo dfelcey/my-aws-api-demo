@@ -11,8 +11,6 @@ variables:
     value: 'anypoint.mulesoft.com'
   - name: API_FILE
     value: "api.json"
-  - name: TMP_DIR
-    value: 'xyz123'
   - name: VERSION
     value: '0'
   # Include encrypted varialbles
@@ -82,6 +80,8 @@ steps:
       \“classifier\”: \“oas\”
     }
     " > exchange.json
+    
+    cat exchange.json
 
     zip ./api.zip exchange.json api.json
 
