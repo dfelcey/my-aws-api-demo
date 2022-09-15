@@ -81,7 +81,7 @@ steps:
       \“main\”: \“$(API_FILE)\”,
       \“classifier\”: \“oas\”
     }
-    " > exhange.json
+    " > exchange.json
 
     zip ./api.zip exchange.json api.json
 
