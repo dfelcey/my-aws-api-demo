@@ -83,9 +83,9 @@ steps:
     }
     " > exhange.json
 
-    zip api.zip exchange.json api.json
+    zip ./api.zip exchange.json api.json
 
-    anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml api.zip \
+    anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
     --organization $(ANYPOINT_ORG) \
     --host=$(ANYPOINT_HOST) \
     --environment=$(ANYPOINT_ENV) > output.txt
