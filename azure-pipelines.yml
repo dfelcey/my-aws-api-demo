@@ -74,12 +74,12 @@ steps:
     env
     
     # Create zip asset to validate
-    echo "
+    echo
     {
-      \“main\”: \“$(API_FILE)\”,
-      \“classifier\”: \“oas\”
+      “main”: “$(API_FILE)”,
+      “classifier”: “oas”
     }
-    " > exchange.json
+    > exchange.json
     
     cat exchange.json
 
