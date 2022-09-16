@@ -83,6 +83,7 @@ steps:
     anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
     --organization $(ANYPOINT_ORG) \
     --host=$(ANYPOINT_HOST) \
+    --output text \
     --environment=$(ANYPOINT_ENV) > governance.txt
     
     cat governance.txt
