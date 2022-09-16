@@ -74,7 +74,7 @@ steps:
     env
     
     # Create zip asset to validate
-    echo "{ \"main"\”: \""${API_FILE}"\”, \"classifier\": \"oas\” }" > exchange.json
+    echo "{ \"main\": \"${API_FILE}\", \"classifier\": \"oas\” }" > exchange.json
     
     cat exchange.json
 
