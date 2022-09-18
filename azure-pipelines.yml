@@ -13,6 +13,8 @@ variables:
     value: "api.json"
   - name: VERSION
     value: '0'
+  - name: ASSET
+    value: package-tracker-api
   # Include encrypted varialbles
   - group: anypoint-variable-group
   # Get branch
@@ -73,13 +75,13 @@ steps:
     echo Environment
     env
     
+    # Download new asset
+    anypoint-cli exchange asset download $(ASSET)/$(VERSION) . \
+      --organization $(ANYPOINT_ORG) \
+      --host=$(ANYPOINT_HOST) \
+      --environment=$(ANYPOINT_ENV)
+
     # Create zip asset to validate
-    echo "{ \"main\": \"${API_FILE}\", \"classifier\": \"oas\" }" > exchange.json
-    
-    cat exchange.json
-
-    zip ./api.zip exchange.json api.json
-
     anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
     --organization $(ANYPOINT_ORG) \
     --host=$(ANYPOINT_HOST) \
