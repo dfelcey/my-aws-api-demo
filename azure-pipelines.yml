@@ -81,6 +81,8 @@ steps:
       --host=$(ANYPOINT_HOST) \
       --environment=$(ANYPOINT_ENV)
 
+    ls
+    
     # Create zip asset to validate
     anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
     --organization $(ANYPOINT_ORG) \
