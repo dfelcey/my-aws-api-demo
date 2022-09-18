@@ -4,6 +4,7 @@
 # - Make parameters more dynamic
 # - Format validation output
 # - Add email notification
+# - More testing
 
 variables:
   - name: CATALOG_DESCRIPTOR
@@ -117,9 +118,9 @@ stages:
         
         # If output indicates error then stop
         if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
-            echo "Failed validation"
+            echo "API validation"
         else
-            echo "Failed succeeded"
+            echo "API failed validation"
         fi
       env:
         ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
