@@ -113,7 +113,6 @@ stages:
         # If output indicates error then stop
         if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
             echo "Failed validation"
-            exit 1
         else
             echo "Failed succeeded"
         fi
