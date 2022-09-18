@@ -61,7 +61,7 @@ stages:
               # Catpture version
               VERSION="${strarr[1]}"
               echo "##vso[task.setvariable variable=apiVersion;isOutput=true;]$VERSION"
-              echo "Version value is $(apiVersion)"
+              echo "Version value is $(catalog.apiVersion)"
             fi
           done < catalog-result.txt
 
@@ -74,12 +74,13 @@ stages:
         ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
         ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
         ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
+      name: catalog
 
   - job: validate_api
     displayName: Validate API
     dependsOn: ['catalog_api']
     variables: 
-      apiVersion: $[ dependencies.catalog_api.outputs['setVariable.apiVersion'] ]
+      apiVersion: $[ dependencies.catalog_api.outputs['catalog.apiVersion'] ]
     steps: 
     - bash: |
         # Validate API
@@ -116,3 +117,4 @@ stages:
       env:
         ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
         ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
+      name: validate
