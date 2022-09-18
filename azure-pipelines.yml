@@ -13,6 +13,8 @@ variables:
     value: "api.json"
   - name: ASSET
     value: package-tracker-api
+  - name: RULESET
+    value: openapi-best-practices-ruleset.yaml
   # Include encrypted varialbles
   - group: anypoint-variable-group
   # Get branch
@@ -61,7 +63,7 @@ stages:
               # Catpture version
               VERSION="${strarr[1]}"
               echo "##vso[task.setvariable variable=apiVersion;isOutput=true;]$VERSION"
-              echo "Version value is $(catalog.apiVersion)"
+              echo "Version value is $(VERSION)"
             fi
           done < catalog-result.txt
 
@@ -97,9 +99,10 @@ stages:
           --environment=$(ANYPOINT_ENV)
 
         ls
+        mv *.zip api.zip
         
         # Create zip asset to validate
-        anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
+        anypoint-cli governance api validate --rulesets  $(RULESET) ./api.zip \
         --organization $(ANYPOINT_ORG) \
         --host=$(ANYPOINT_HOST) \
         --output text \
