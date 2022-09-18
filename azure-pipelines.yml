@@ -65,7 +65,7 @@ stages:
             fi
           done < catalog-result.txt
 
-          echo Latest version $VERSION
+          echo Latest version $(apiVersion)
         else
           exit 1
         fi
