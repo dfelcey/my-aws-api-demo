@@ -75,6 +75,8 @@ steps:
     echo Environment
     env
     
+    echo "Version: " $(VERSION)
+    
     # Download new asset
     anypoint-cli exchange asset download $(ASSET)/$(VERSION) . \
       --organization $(ANYPOINT_ORG) \
