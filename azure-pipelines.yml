@@ -79,7 +79,7 @@ stages:
     displayName: Validate API
     dependsOn: ['catalog_api']
     variables: 
-      apiVersion: $[ dependencies.catalog_api.outputs['setVariable.catalog_api'] ]
+      apiVersion: $[ dependencies.catalog_api.outputs['setVariable.apiVersion'] ]
     steps: 
     - bash: |
         # Validate API
