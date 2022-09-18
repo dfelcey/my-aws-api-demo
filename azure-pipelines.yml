@@ -1,4 +1,9 @@
 # Example MuleSoft API cataloging and governance pipelinr
+# Github project is here: https://github.com/dfelcey/my-aws-api-demo
+# ToDo:
+# - Make parameters more dynamic
+# - Format validation output
+# - Add email notification
 
 variables:
   - name: CATALOG_DESCRIPTOR
