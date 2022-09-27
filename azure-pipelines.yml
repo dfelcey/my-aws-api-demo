@@ -1,4 +1,10 @@
 # Example MuleSoft API cataloging and governance pipelinr
+# Github project is here: https://github.com/dfelcey/my-aws-api-demo
+# ToDo:
+# - Make parameters more dynamic
+# - Format validation output
+# - Add email notification
+# - More testing
 
 variables:
   - name: CATALOG_DESCRIPTOR
@@ -11,8 +17,10 @@ variables:
     value: 'anypoint.mulesoft.com'
   - name: API_FILE
     value: "api.json"
-  - name: VERSION
-    value: '0'
+  - name: ASSET
+    value: package-tracker-api
+  - name: RULESET
+    value: openapi-best-practices-ruleset.yaml
   # Include encrypted varialbles
   - group: anypoint-variable-group
   # Get branch
@@ -20,81 +28,101 @@ variables:
     value: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
 trigger:
-- develop
+- master
 
 pool: 
   name: "default"
 
-steps:
-- bash: |
-    if [ -e $(CATALOG_DESCRIPTOR) ]
-    then      
-      cat $(API_FILE)
-      
-      echo Environment
-      env
+stages:
+- stage: publish_api
+  displayName: Exchange
+  jobs: 
+  - job: catalog_api
+    displayName: Catalog API
+    steps:
+    - bash: |
+        if [ -e $(CATALOG_DESCRIPTOR) ]
+        then      
+          cat $(API_FILE)
+          
+          echo Environment
+          env
 
-      # Publish API      
-      api-catalog publish-asset \
-      --trigger-criteria=branch:$(BRANCH_NAME) \
-      --organization $(ANYPOINT_ORG) \
-      --host=$(ANYPOINT_HOST) \
-      --environment=$(ANYPOINT_ENV) \
-      --client_id=$(ANYPOINT_CLIENT_ID) \
-      --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
-      
-      cat catalog-result.txt
-      
-      # Capture latest version
-      while IFS= read -r line
-      do
-        echo $line
-        read -a strarr <<< $line
-        if [[ "$line" == "Version"* ]]
-        then
-          VERSION="${strarr[1]}"
+          # Publish API      
+          api-catalog publish-asset \
+          --trigger-criteria=branch:$(BRANCH_NAME) \
+          --organization $(ANYPOINT_ORG) \
+          --host=$(ANYPOINT_HOST) \
+          --environment=$(ANYPOINT_ENV) \
+          --client_id=$(ANYPOINT_CLIENT_ID) \
+          --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
+          
+          cat catalog-result.txt
+          
+          # Capture latest version
+          while IFS= read -r line
+          do
+            echo $line
+            read -a strarr <<< $line
+            if [[ "$line" == "Version"* ]]
+            then
+              # Catpture version
+              VERSION="${strarr[1]}"
+              echo "##vso[task.setvariable variable=apiVersion;isOutput=true;]$VERSION"
+              echo "Version value is $(VERSION)"
+            fi
+          done < catalog-result.txt
+
+          echo Latest version $(apiVersion)
+        else
+          exit 1
         fi
-      done < catalog-result.txt
+      env:
+        ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
+        ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
+        ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
+        ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
+      name: catalog
 
-      echo Latest version $VERSION
-    else
-      exit 1
-    fi
-  env:
-    ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
-    ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
-    ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
-    ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
-  displayName: 'Catalog and validate'
+  - job: validate_api
+    displayName: Validate API
+    dependsOn: ['catalog_api']
+    variables: 
+      apiVersion: $[ dependencies.catalog_api.outputs['catalog.apiVersion'] ]
+    steps: 
+    - bash: |
+        # Validate API
+        
+        echo Environment
+        env
+        
+        echo Version: $(apiVersion)
 
-- bash: |
-    # Validate API
-    
-    echo Environment
-    env
-    
-    # Create zip asset to validate
-    echo "{ “\"main\"”: “\"${API_FILE}\"”, “\"classifier”\"": “\"oas\"” }" > exchange.json
-    
-    cat exchange.json
+        # Download new asset
+        anypoint-cli exchange asset download $(ASSET)/$(apiVersion) . \
+          --organization $(ANYPOINT_ORG) \
+          --host=$(ANYPOINT_HOST) \
+          --environment=$(ANYPOINT_ENV)
 
-    zip ./api.zip exchange.json api.json
-
-    anypoint-cli governance api validate --rulesets  openapi-best-practices-ruleset.yaml ./api.zip \
-    --organization $(ANYPOINT_ORG) \
-    --host=$(ANYPOINT_HOST) \
-    --environment=$(ANYPOINT_ENV) > governance.txt
-    
-    cat governance.txt
-    
-    # If output indicates error then stop
-    if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
-        echo "Failed validation"
-        exit 1
-    else
-        echo "Failed succeeded"
-    fi
-  env:
-    ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
-    ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
-  displayName: 'Validate against ruleset'
+        ls
+        mv *.zip api.zip
+        
+        # Create zip asset to validate
+        anypoint-cli governance api validate --rulesets  $(RULESET) ./api.zip \
+        --organization $(ANYPOINT_ORG) \
+        --host=$(ANYPOINT_HOST) \
+        --output text \
+        --environment=$(ANYPOINT_ENV) > governance.txt
+        
+        cat governance.txt
+        
+        # If output indicates error then stop
+        if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
+            echo "API validation"
+        else
+            echo "API failed validation"
+        fi
+      env:
+        ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
+        ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
+      name: validate
