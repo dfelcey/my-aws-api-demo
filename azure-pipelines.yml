@@ -48,6 +48,8 @@ stages:
           echo Environment
           env
           echo Branch: $(BRANCH_NAME)
+          echo Configuration...
+          cat catalog.yaml
 
           # Publish API      
           api-catalog publish-asset \
