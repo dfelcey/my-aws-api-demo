@@ -53,7 +53,7 @@ stages:
 
           # Publish API      
           api-catalog publish-asset \
-          --trigger-criteria=branch:$(BRANCH_NAME) \
+          --trigger-criteria=branches:$(BRANCH_NAME) \
           --organization $(ANYPOINT_ORG) \
           --host=$(ANYPOINT_HOST) \
           --environment=$(ANYPOINT_ENV) \
