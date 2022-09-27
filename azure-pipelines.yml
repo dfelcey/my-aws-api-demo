@@ -47,6 +47,7 @@ stages:
           
           echo Environment
           env
+          echo Branch: $(BRANCH_NAME)
 
           # Publish API      
           api-catalog publish-asset \
