@@ -14,12 +14,6 @@
       "url": "https://mulesoft.com"
     }
   },
-  "security" :
-  [
-    { 
-      "BasicAuth": []
-    }
-  ],
   "tags": [
     {
       "name": "Package Tracking",
@@ -47,7 +41,8 @@
             "description": "ID of package",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "pattern": "\d{3}-\d{2}$"
             },
             "example": "12345"
           }
@@ -66,7 +61,10 @@
                 }
               }
             }
-          }
+          },
+          "429": {
+            "description": "too many requests"
+          }     
         }
       }
     }
@@ -84,10 +82,14 @@
         "properties": {
           "status": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
             "example": "In transit"
           },
           "message": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
             "example": "On route to destination"
           }
         },
