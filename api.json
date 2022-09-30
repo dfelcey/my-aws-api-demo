@@ -6,7 +6,7 @@
     "description": "An API to track the ongoing status of a package easily blah blah blah",
     "license": {
       "name": "Apache 2.0",
-    "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "contact": {
       "name": "Dave Felcey",
@@ -20,18 +20,15 @@
       "description": "Get current package status"
     }
   ],
-  "security" :
-  [
-    { 
+  "security": [
+    {
       "BasicAuth": []
     }
   ],
   "paths": {
     "/status/{id}": {
       "get": {
-        "tags": [
-          "Package Tracking"
-        ],
+        "tags": ["Package Tracking"],
         "description": "Gets the status of a package",
         "operationId": "get package status",
         "parameters": [
@@ -42,7 +39,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "pattern":  "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"
+              "pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"
             },
             "example": "79311a05-1548-4cf0-b6e2-5d1d41934a55"
           }
@@ -63,20 +60,46 @@
             }
           },
           "429": {
-            "description": "too many requests"
-          }     
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": 429,
+                  "message": "Too many requests"
+                }
+              }
+            }
+          }
         }
       }
     }
   },
   "components": {
     "securitySchemes": {
-       "BasicAuth": {
+      "BasicAuth": {
         "type": "http",
         "scheme": "basic"
       }
     },
     "schemas": {
+      "GeneralError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[ a-zA-Z0-9]+"
+          }
+        }
+      },
       "Body": {
         "type": "object",
         "properties": {
