@@ -17,9 +17,6 @@ projects:
     assetId: package-tracker-api
     version: 1.0.1
     apiVersion: v1
-    contact:
-      name: Dave Felcey
-      email: dave.felcey@mulesoft.com
     documentation:
       Additional Information: Additional_Information.md
       Home: Home.md
