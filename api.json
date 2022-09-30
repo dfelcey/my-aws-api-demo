@@ -84,14 +84,14 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 50,
-            "pattern": "^[ a-zA-Z0-9]+"
+            "pattern": "^[ a-zA-Z0-9]+",
             "example": "In transit"
           },
           "message": {
             "type": "string",
             "minLength": 1,
             "maxLength": 50,
-            "pattern": "^[ a-zA-Z0-9]+"
+            "pattern": "^[ a-zA-Z0-9]+",
             "example": "On route to destination"
           }
         },
