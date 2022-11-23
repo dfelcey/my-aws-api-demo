@@ -16,7 +16,7 @@
   },
   "tags": [
     {
-      "name": "Package Tracking",
+      "name": "Package Tracking API",
       "description": "Get current package status"
     }
   ],
