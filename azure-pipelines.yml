@@ -115,7 +115,8 @@ stages:
         --organization $(ANYPOINT_ORG) \
         --host=$(ANYPOINT_HOST) \
         --output text \
-        --environment=$(ANYPOINT_ENV) > governance.txt
+        --environment=$(ANYPOINT_ENV) \
+        --output table > governance.txt
         
         cat governance.txt
         
