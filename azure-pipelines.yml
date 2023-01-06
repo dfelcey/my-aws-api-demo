@@ -53,8 +53,8 @@ stages:
           --organization $(ANYPOINT_ORG) \
           --host=$(ANYPOINT_HOST) \
           --environment=$(ANYPOINT_ENV) \
-          --client_id=$(ANYPOINT_CLIENT_ID) \
-          --client_secret=$(ANYPOINT_CLIENT_SECRET) > catalog-result.txt
+          --username=$(ANYPOINT_USERNAME) \
+          --password=$(ANYPOINT_PASSWORD) > catalog-result.txt
           
           cat catalog-result.txt
           
@@ -77,6 +77,6 @@ stages:
           exit 1
         fi
       env:
-        ANYPOINT_CLIENT_ID: $(ANYPOINT_CLIENT_ID)
-        ANYPOINT_CLIENT_SECRET: $(ANYPOINT_CLIENT_SECRET)
+        ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
+        ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
       name: catalog
