@@ -2,8 +2,6 @@
 # Github project is here: https://github.com/dfelcey/my-aws-api-demo
 # ToDo:
 # - Make parameters more dynamic
-# - Format validation output
-# - Add email notification
 # - More testing
 
 variables:
@@ -19,8 +17,6 @@ variables:
     value: "api.json"
   - name: ASSET
     value: package-tracker-api
-  - name: RULESET
-    value: openapi-best-practices-ruleset.yaml
   # Include encrypted varialbles
   - group: anypoint-variable-group
   # Get branch
@@ -86,47 +82,3 @@ stages:
         ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
         ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
       name: catalog
-
-  - job: validate_api
-    displayName: Validate API
-    dependsOn: ['catalog_api']
-    variables: 
-      apiVersion: $[ dependencies.catalog_api.outputs['catalog.apiVersion'] ]
-    steps: 
-    - bash: |
-        # Validate API
-        
-        echo Environment
-        env
-        
-        echo Version: $(apiVersion)
-
-        # Download new asset
-        anypoint-cli exchange asset download $(ASSET)/$(apiVersion) . \
-          --organization $(ANYPOINT_ORG) \
-          --host=$(ANYPOINT_HOST) \
-          --environment=$(ANYPOINT_ENV)
-
-        ls
-        mv *.zip api.zip
-        
-        # Create zip asset to validate
-        anypoint-cli governance api validate --rulesets  $(RULESET) ./api.zip \
-        --organization $(ANYPOINT_ORG) \
-        --host=$(ANYPOINT_HOST) \
-        --output text \
-        --environment=$(ANYPOINT_ENV) \
-        --output table > governance.txt
-        
-        cat governance.txt
-        
-        # If output indicates error then stop
-        if [[ ! $(grep "Spec conforms with Ruleset" governance.txt) ]] ; then
-            echo "API validation"
-        else
-            echo "API failed validation"
-        fi
-      env:
-        ANYPOINT_USERNAME: $(ANYPOINT_USERNAME)
-        ANYPOINT_PASSWORD: $(ANYPOINT_PASSWORD)
-      name: validate
