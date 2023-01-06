@@ -29,7 +29,7 @@
     "/status/{id}": {
       "get": {
         "tags": ["Package Tracking"],
-        "description": "Gets the status of a package",
+        "description": "Gets the status of a package in transit",
         "operationId": "get-package-status",
         "parameters": [
           {
